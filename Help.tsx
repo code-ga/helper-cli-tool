@@ -26,6 +26,17 @@ export const HelpPage = () => {
             </UnorderedList.Item>
           </UnorderedList>
         </UnorderedList.Item>
+        <UnorderedList.Item>
+          <Text>Github (github)</Text>
+          <Text>Some util for github repository</Text>
+          <UnorderedList>
+            <UnorderedList.Item>
+              <Text>issues (issues)</Text>
+              <Text>using: github issues [number of issues]</Text>
+              <Text>list 10 newest issues of this repository</Text>
+            </UnorderedList.Item>
+          </UnorderedList>
+        </UnorderedList.Item>
       </UnorderedList>
     </>
   );

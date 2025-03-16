@@ -25,16 +25,17 @@ function InitForm() {
     return (
       <>
         <Text>
-          Please choose the package manager (choose the package manager
-          installed in your pc please i cannot guess what error will have{" "}
+          Please choose the package manager{" "}
+          <Text bold>
+            (choose the package manager installed in your pc, i cannot guess
+            what error will have
+          </Text>
           {"=>>"}):
         </Text>
         <Select
           options={[
-            { label: "NPM", value: "npm" },
             { label: "Bun", value: "bun" },
-            { label: "Yarn", value: "yarn" },
-            { label: "PNPM", value: "pnpm" },
+            { label: "NPM", value: "npm" },
           ]}
           onChange={(value) => {
             setPackageManager(value);

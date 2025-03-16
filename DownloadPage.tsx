@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { readFile, mkdirSync, createWriteStream } from "fs";
-import { Text } from "ink";
+import { Box, Newline, Text } from "ink";
 import { ProgressBar, Alert } from "@inkjs/ui";
-import { execSync } from "child_process";
+import childProcess from "child_process";
 import path from "path";
-import {default as nodeFetch} from "node-fetch";
+import { default as nodeFetch } from "node-fetch";
+import stripAnsi from "strip-ansi";
 
 const totalSteps = 6;
 
@@ -26,6 +27,7 @@ export const DownloadPage = ({ args }: { args: string[] }) => {
     }>({});
   const [error, setError] = useState(null);
   const [metaFile, setMetaFile] = useState<{ [key: string]: any }>({});
+  const [log, setLog] = useState<string[]>([]);
 
   if (error) return <Alert variant="error">{error}</Alert>;
   if (step === 1) {
@@ -67,11 +69,25 @@ export const DownloadPage = ({ args }: { args: string[] }) => {
     const packagesList = Object.keys(metaFile.dependence)
       .reduce((acc, key) => `${acc} ${key}@${metaFile.dependence[key]}`, "")
       .trim();
-    console.log(
-      `Installing dependencies (${packagesList}) using ${packageManager}...`
+    setLog((logs) =>
+      logs.concat(
+        `Installing dependencies (${packagesList}) using ${packageManager}...`
+      )
     );
-    const command = `${packageManager} install ${packagesList}`.trim();
-    execSync(command, { stdio: "inherit" });
+    if (!packageManager) {
+      return (
+        <Alert variant="error">packageManager is required in config file</Alert>
+      );
+    }
+    const process = childProcess.spawn(packageManager, [
+      "install",
+      packagesList,
+    ]);
+    process.stdout.on("data", (data) => {
+      const lines = stripAnsi(data.toString("utf8")).split("\n");
+
+      setLog((log) => [...log, ...lines]);
+    });
     setStep({ step: 4, name: "creating component directory" });
   } else if (step === 4) {
     if (!componentsDir) {
@@ -101,6 +117,14 @@ export const DownloadPage = ({ args }: { args: string[] }) => {
   }
   return (
     <>
+      <Box>
+        {log.slice(log.length - 5).map((line, key) => (
+          <Box key={key}>
+            <Text key={key}>{line}</Text>
+            <Newline></Newline>
+          </Box>
+        ))}
+      </Box>
       <Text>
         {step}/{totalSteps}: {name}
       </Text>
