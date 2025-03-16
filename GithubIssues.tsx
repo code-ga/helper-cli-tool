@@ -10,14 +10,14 @@ export const GithubIssues = ({ args }: { args: string[] }) => {
 
   useEffect(() => {
     (async () => {
-      // const { owner, repo } = await ParseRepoUrl();
-      // if (!owner || !repo) {
-      //   setError("Invalid repository url");
-      //   setLoading(false);
-      //   return;
-      // }
+      const { owner, repo } = await ParseRepoUrl();
+      if (!owner || !repo) {
+        setError("Invalid repository url");
+        setLoading(false);
+        return;
+      }
       const res = await fetch(
-        `https://api.github.com/repos/${"vercel"}/${"vercel"}/issues?per_page=${
+        `https://api.github.com/repos/${owner}/${repo}/issues?per_page=${
           args[0] || 10
         }`
       );
