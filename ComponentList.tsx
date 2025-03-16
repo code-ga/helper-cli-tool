@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Spinner, Alert, OrderedList } from "@inkjs/ui";
-import { Text } from "ink";
+import { Box, Newline, Text } from "ink";
 
 interface Component {
   name: string;
@@ -34,21 +34,33 @@ export const ComponentListPage = () => {
   ) : error ? (
     <Alert variant="error">{error}</Alert>
   ) : (
-    <OrderedList>
-      {Object.values(components).map((component, key) => (
-        <OrderedList.Item key={key}>
-          <Text bold underline>
-            {component.name}
-          </Text>
-          <Text>description: {component.description}</Text>
-          <Text>version: {component.version}</Text>
-          <Text>storybook url: {component["storybook-url"]}</Text>
-          <Text>
-            download command:{" "}
-            <Text bold>{`tool components download ${component.meta}`}</Text>
-          </Text>
-        </OrderedList.Item>
-      ))}
-    </OrderedList>
+    <Box justifyContent="center" flexDirection="column">
+      <OrderedList>
+        {Object.values(components).map((component, key) => (
+          <OrderedList.Item key={key}>
+            <Text bold underline>
+              {component.name}
+            </Text>
+            <Text>description: {component.description}</Text>
+            <Text>version: {component.version}</Text>
+            <Text>storybook url: {component["storybook-url"]}</Text>
+            <Text>
+              download command:{" "}
+              <Text
+                bold
+              >{`helper.exe components download ${component.meta}`}</Text>
+            </Text>
+            <Newline></Newline>
+          </OrderedList.Item>
+        ))}
+      </OrderedList>
+      <Newline></Newline>
+      <Text bold>
+        feel free to share your component at{" "}
+        <Text underline backgroundColor={"blue"}>
+          https://github.com/code-ga/helper-cli-tool-repository
+        </Text>
+      </Text>
+    </Box>
   );
 };
