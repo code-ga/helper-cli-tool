@@ -29,7 +29,7 @@ export const GithubIssue = ({ args }: { args: string[] }) => {
         }/comments`
       );
       const issuesInfoRes = await fetch(
-        `https://api.github.com/repos/${owner}/${repo}/issues/6973`
+        `https://api.github.com/repos/${owner}/${repo}/issues/${args[0]}`
       );
 
       if (res.ok) {
