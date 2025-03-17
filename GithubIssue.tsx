@@ -24,12 +24,12 @@ export const GithubIssue = ({ args }: { args: string[] }) => {
         return;
       }
       const res = await fetch(
-        `https://api.github.com/repos/${"vercel"}/${"vercel"}/issues/${
+        `https://api.github.com/repos/${owner}/${repo}/issues/${
           args[0]
         }/comments`
       );
       const issuesInfoRes = await fetch(
-        `https://api.github.com/repos/${"vercel"}/${"vercel"}/issues/6973`
+        `https://api.github.com/repos/${owner}/${repo}/issues/6973`
       );
 
       if (res.ok) {
