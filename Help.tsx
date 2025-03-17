@@ -3,7 +3,7 @@ import { Box, Text } from "ink";
 export const HelpPage = () => {
   return (
     <>
-      <Box borderStyle="classic" marginRight={2}>
+      <Box borderStyle="classic" marginRight={2} alignItems="center" justifyContent="center">
         <Text>Some helper tool for developers frontend and backend</Text>
       </Box>
       <UnorderedList>
@@ -34,6 +34,11 @@ export const HelpPage = () => {
               <Text>issues (issues)</Text>
               <Text>using: github issues [number of issues]</Text>
               <Text>list 10 newest issues of this repository</Text>
+            </UnorderedList.Item>
+            <UnorderedList.Item>
+              <Text>issue (issue)</Text>
+              <Text>using: github issue [number of issue]</Text>
+              <Text>open an issue in this repository</Text>
             </UnorderedList.Item>
           </UnorderedList>
         </UnorderedList.Item>

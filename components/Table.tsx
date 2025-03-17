@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Text } from "ink";
 import { sha1 } from "object-hash";
+import terminalSize from "terminal-size";
 
 /* Table */
 
@@ -281,54 +282,64 @@ function row<T extends ScalarDict>(
   const skeleton = config.skeleton;
 
   /* Row */
-  return (props) => (
-    <Box flexDirection="row">
-      {/* Left */}
-      <skeleton.component>{skeleton.left}</skeleton.component>
-      {/* Data */}
-      {...intersperse(
-        (i) => {
-          const key = `${props.key}-hseparator-${i}`;
+  return (props) => {
+    let maxWidth = terminalSize().columns - config.padding * 2;
+    let currentWidth = 0;
+    return (
+      <Box flexDirection="row">
+        {/* Left */}
+        <skeleton.component>{skeleton.left}</skeleton.component>
+        {/* Data */}
+        {...intersperse(
+          (i) => {
+            const key = `${props.key}-hseparator-${i}`;
 
-          // The horizontal separator.
-          return (
-            <skeleton.component key={key}>{skeleton.cross}</skeleton.component>
-          );
-        },
-
-        // Values.
-        props.columns.map((column, colI) => {
-          // content
-          const value = props.data[column.column];
-
-          if (value == undefined || value == null) {
-            const key = `${props.key}-empty-${column.key}`;
-
+            // The horizontal separator.
             return (
-              <config.cell key={key} column={colI}>
-                {skeleton.line.repeat(column.width)}
-              </config.cell>
+              <skeleton.component key={key}>
+                {skeleton.cross}
+              </skeleton.component>
             );
-          } else {
-            const key = `${props.key}-cell-${column.key}`;
+          },
+          // Values.
+          props.columns.map((column, colI) => {
+            // content
+            const value = props.data[column.column];
+            currentWidth += column.width;
+            if (currentWidth > maxWidth) {
+              return;
+            }
+            if (value == undefined || value == null) {
+              const key = `${props.key}-empty-${column.key}`;
 
-            // margins
-            const ml = config.padding;
-            const mr = column.width - String(value).length - config.padding;
+              return (
+                <config.cell key={key} column={colI}>
+                  {skeleton.line.repeat(column.width)}
+                </config.cell>
+              );
+            } else {
+              const key = `${props.key}-cell-${column.key}`;
 
-            return (
-              /* prettier-ignore */
-              <config.cell key={key} column={colI}>
-                {`${skeleton.line.repeat(ml)}${String(value)}${skeleton.line.repeat(mr)}`}
-              </config.cell>
-            );
-          }
-        })
-      )}
-      {/* Right */}
-      <skeleton.component>{skeleton.right}</skeleton.component>
-    </Box>
-  );
+              // margins
+              const ml = config.padding;
+              const mr = column.width - String(value).length - config.padding;
+
+              // width
+
+              return (
+                /* prettier-ignore */
+                <config.cell key={key} column={colI}>
+                  {`${skeleton.line.repeat(ml)}${String(value)}${skeleton.line.repeat(mr)}`}
+                </config.cell>
+              );
+            }
+          })
+        )}
+        {/* Right */}
+        <skeleton.component>{skeleton.right}</skeleton.component>
+      </Box>
+    );
+  };
 }
 
 /**
